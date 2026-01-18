@@ -67,3 +67,30 @@ export async function getUser(navigate) {
   appState.logOutUser();
   throw Error('User not found');
 }
+
+/**
+ * Update user's background pattern
+ * @param {string} pattern - The pattern to set
+ * @returns {Promise<User|undefined>} The user's updated profile
+ */
+export async function updatePattern(pattern) {
+  try {
+    const res = await axios.post(import.meta.env.VITE_API_URL + '/profile/updatePattern', {
+      _id: appState.getUserData()._id,
+      pattern
+    });
+
+    if (res.data.statusCode === 200) {
+      appState.setUserData(res.data.data);
+      toast.success('Pattern updated successfully');
+      return res.data.data;
+    } else {
+      toast.error(res.data.message || 'Failed to update pattern');
+      return undefined;
+    }
+  } catch (error) {
+    console.error('Update pattern error:', error);
+    toast.error('An error occurred while updating pattern');
+    return undefined;
+  }
+}

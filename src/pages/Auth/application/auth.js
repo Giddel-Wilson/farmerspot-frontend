@@ -37,17 +37,24 @@ export default async function login(email, password) {
 export async function signUp(data) {
   const { name, email, password, userType, phone, latitude, longitude } = data;
 
-  const res = await axios.post(import.meta.env.VITE_API_URL + '/auth/signup', {
+  // Build request body
+  const requestBody = {
     name,
     email: email.toLowerCase(),
     password,
     userType,
-    phone,
-    location: {
+    phone
+  };
+
+  // Only include location if coordinates are valid numbers
+  if (typeof latitude === 'number' && typeof longitude === 'number') {
+    requestBody.location = {
       type: 'Point',
       coordinates: [latitude, longitude]
-    }
-  });
+    };
+  }
+
+  const res = await axios.post(import.meta.env.VITE_API_URL + '/auth/signup', requestBody);
 
   if (res.data.statusCode === 200) {
     toast.success(res.data.message);

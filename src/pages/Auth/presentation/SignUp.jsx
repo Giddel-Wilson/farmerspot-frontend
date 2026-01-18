@@ -33,6 +33,11 @@ function SignUp() {
   }, []);
 
   const handleSignUp = async () => {
+    if (data.name.length === 0) {
+      toast.error('Enter your name to sign up');
+      return;
+    }
+
     if (data.email.length === 0) {
       toast.error('Enter your email to sign up');
       return;
@@ -50,10 +55,6 @@ function SignUp() {
 
     if (data.phone.length < 10) {
       toast.error('Enter a correct phone number to continue');
-      return;
-    }
-    if (data.longitude === '' || data.latitude === '') {
-      toast.error('Unable to get your location, try reloading the page or providing access.');
       return;
     }
 

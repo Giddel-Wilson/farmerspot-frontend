@@ -1,5 +1,5 @@
 import appState from '../../../data/AppState';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import useProfileMutations from '../../../hooks/ProfileHook';
 
 import male from '../../../assets/icons/male.svg';
 import './pattern.css';
-import { getUser } from '../application/profile';
+import { getUser, updatePattern } from '../application/profile';
 
 function Profile() {
   const fileInputRef = useRef(null);
@@ -32,6 +32,13 @@ function Profile() {
 
   const [pattern, setPattern] = useState('pattern1');
   const patterns = ['pattern1', 'pattern2', 'pattern3'];
+
+  // Initialize pattern from user data
+  useEffect(() => {
+    if (user?.pattern) {
+      setPattern(user.pattern);
+    }
+  }, [user]);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -66,7 +73,7 @@ function Profile() {
     <>
       <main className="min-h-[100vh]">
         <div
-          className={`mt-[8vh] h-[20vh] w-full ${user?.pattern ? user?.pattern : pattern}`}
+          className={`mt-[8vh] h-[20vh] w-full ${pattern}`}
         ></div>
         <div className="absolute top-[20vh] left-1/2 -translate-x-1/2 bg-white rounded-full p-3 shadow-md">
           <img className="h-[100px] w-[100px]" src={male} alt="" />
@@ -95,17 +102,19 @@ function Profile() {
                   modal.showModal();
                 }}
               >
-                <a>Edit Details</a>
+                <a>Edit Profile</a>
               </li>
               <li>
                 <a
-                  onClick={() => {
+                  onClick={async () => {
                     // Switch between patterns list items
                     let index = patterns.indexOf(pattern);
                     index = (index + 1) % patterns.length;
-                    setPattern(patterns[index]);
-                    user.pattern = patterns[index];
-                    appState.setUserData(user);
+                    const newPattern = patterns[index];
+                    setPattern(newPattern);
+                    
+                    // Save pattern to backend
+                    await updatePattern(newPattern);
                   }}
                 >
                   Change Pattern

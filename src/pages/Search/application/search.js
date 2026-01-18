@@ -14,3 +14,21 @@ export default async function search(query) {
   toast.error(res.data.message);
   return [];
 }
+
+/**
+ * Get autocomplete suggestions for product names
+ * @param {string} query
+ * @returns {Promise<string[]>}
+ */
+export async function getAutocompleteSuggestions(query) {
+  try {
+    const res = await axios.get(import.meta.env.VITE_API_URL + `/search/autocomplete/${query}`);
+    if (res.data.statusCode === 200) {
+      return res.data.data;
+    }
+    return [];
+  } catch (error) {
+    console.error('Autocomplete error:', error);
+    return [];
+  }
+}

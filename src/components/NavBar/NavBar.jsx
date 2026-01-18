@@ -49,14 +49,16 @@ function NavBar() {
           </div>
         </div>
 
-        <div className="hidden md:flex group">
-          <div 
-            onClick={() => navigate('/profile')} 
-            className="cursor-pointer mx-3 p-2.5 rounded-xl hover:bg-premium-50 transition-all duration-300 hover:scale-110 active:scale-95"
-          >
-            <User className="text-gray-700 group-hover:text-premium-600" size={22} />
+        {appState.isLoggedIn && (
+          <div className="hidden md:flex group">
+            <div 
+              onClick={() => navigate('/profile')} 
+              className="cursor-pointer mx-3 p-2.5 rounded-xl hover:bg-premium-50 transition-all duration-300 hover:scale-110 active:scale-95"
+            >
+              <User className="text-gray-700 group-hover:text-premium-600" size={22} />
+            </div>
           </div>
-        </div>
+        )}
 
         <CartNotifier />
 
@@ -69,25 +71,36 @@ function NavBar() {
             className="dropdown-content z-[1] menu p-3 shadow-premium bg-white rounded-2xl w-56 border border-gray-100 mt-2"
           >
             <NavBarItem text="Home" route="/home" />
-            <NavBarItem text="Shop" route="/shop" />
             <NavBarItem text="About" route="/about" />
+            <NavBarItem text="Contact Us" route="/contact" />
+            
+            {!appState.isLoggedIn && (
+              <>
+                <NavBarItem text="Login" route="/auth" />
+                <NavBarItem text="Sign Up" route="/register" />
+              </>
+            )}
+            
             {appState.isCustomer() && <NavBarItem text="My Orders" route="/orders" />}
             {appState.isFarmer() && <NavBarItem text="Manage Orders" route="/farmer/orders" />}
             {appState.isAdmin() && <NavBarItem text="Admin Dashboard" route="/admin/dashboard" />}
-            <li
-              onClick={() => {
-                appState.logOutUser();
-                queryClient.removeQueries(['profile']);
-                queryClient.removeQueries(['cart']);
-                queryClient.removeQueries(['explore']);
-                queryClient.removeQueries(['items']);
+            
+            {appState.isLoggedIn && (
+              <li
+                onClick={() => {
+                  appState.logOutUser();
+                  queryClient.removeQueries(['profile']);
+                  queryClient.removeQueries(['cart']);
+                  queryClient.removeQueries(['explore']);
+                  queryClient.removeQueries(['items']);
 
-                navigate('/auth');
-              }}
-              className="hover:bg-red-50 rounded-xl transition-all duration-200"
-            >
-              <h6 className="text-red-600 font-medium">Logout</h6>
-            </li>
+                  navigate('/auth');
+                }}
+                className="hover:bg-red-50 rounded-xl transition-all duration-200"
+              >
+                <h6 className="text-red-600 font-medium">Logout</h6>
+              </li>
+            )}
           </ul>
         </div>
       </motion.header>

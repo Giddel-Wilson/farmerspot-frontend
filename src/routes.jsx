@@ -13,6 +13,7 @@ const Login = lazy(() => import('./pages/Auth/presentation/Login'));
 const Landing = lazy(() => import('./pages/Landing/presentation/Landing'));
 const Shop = lazy(() => import('./pages/shop/presentation/Shop'));
 const About = lazy(() => import('./pages/About/presentation/about'));
+const Contact = lazy(() => import('./pages/Contact/presentation/Contact'));
 const ItemDetail = lazy(() => import('./pages/shop/presentation/ItemDetail'));
 const Search = lazy(() => import('./pages/Search/presentation/Search'));
 const Profile = lazy(() => import('./pages/Profile/presentation/Profile'));
@@ -66,6 +67,10 @@ const routes = createBrowserRouter([
         element: <About />
       },
       {
+        path: '/contact',
+        element: <Contact />
+      },
+      {
         path: '/shop',
         element: <Shop />
       },
@@ -107,6 +112,10 @@ const routes = createBrowserRouter([
       },
       {
         path: '/additem',
+        element: <AddItem />
+      },
+      {
+        path: '/add',
         element: <AddItem />
       }
     ]
